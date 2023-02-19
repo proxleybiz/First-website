@@ -14,3 +14,30 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@font-face {
+  font-family: "regular";
+  src: url("../fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: "bold";
+  src: url("../fonts/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: "thin";
+  src: url("../fonts/Poppins-Thin.ttf");
+}
+
+.btn-hover {
+  transition: 0.7s;
+  background-color: rgb(33, 96, 253);
+  color: white;
+}
+
+.btn-hover:hover {
+  background-color: white;
+  color: rgb(33, 96, 253);
+  transition: 0.7s;
+}
