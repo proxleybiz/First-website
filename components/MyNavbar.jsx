@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Nav, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import right from "../imgs/right.png";
 
 function MyNavbar() {

@@ -30,6 +30,11 @@ a {
   src: url("../fonts/Poppins-Thin.ttf");
 }
 
+@font-face {
+  font-family: "semibold";
+  src: url("../fonts/Poppins-SemiBold.ttf");
+}
+
 .btn-hover {
   transition: 0.7s;
   background-color: rgb(33, 96, 253);
@@ -40,4 +45,15 @@ a {
   background-color: white;
   color: rgb(33, 96, 253);
   transition: 0.7s;
+}
+
+.gradient-text {
+  background-color: white;
+  background-image: linear-gradient(25deg, white, #2160fd);
+  background-size: 100%;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
 }
