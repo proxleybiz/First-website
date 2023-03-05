@@ -24,7 +24,7 @@ function MyHero() {
       <Nav.Link
         className="btn py-2 px-4 br-2 fs-6 d-flex flex-row justify-content-center btn-hover"
         style={{ fontFamily: "regular" }}
-        href="/register"
+        href="/auth"
       >
         Get Started <img src={right.src} />
       </Nav.Link>
