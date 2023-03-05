@@ -77,7 +77,9 @@ function ExploreProducts() {
                     <Card className="w-100 p-1">
                       <Card.Img variant="top" src={item.img} />
                       <Card.Body style={{ fontFamily: "regular" }}>
-                        <Card.Title> {item.heading} </Card.Title>
+                        <Card.Title>
+                          <b> {item.heading} </b>
+                        </Card.Title>
                         <Card.Text>{item.text}</Card.Text>
                         <Card.Link style={{ color: "#2160fd" }} href="/">
                           Get Started
