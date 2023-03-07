@@ -1,29 +1,23 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { Container } from "react-bootstrap";
 import MyNavbar from "../../../components/MyNavbar";
+import { isJwtExpired } from "jwt-check-expiration";
+import jwt_decode from "jwt-decode";
 
 function DashboardMain() {
   const router = useRouter();
-  const getUserData = async () => {
-    const res = await axios.get("/api/getUserData", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      },
-    });
-    if (res.data.status) {
-    } else {
-      localStorage.removeItem("accessToken");
-      router.replace("/auth");
-    }
-  };
   useEffect(() => {
     if (
       localStorage.getItem("accessToken") !== null &&
       localStorage.getItem("accessToken") !== undefined
     ) {
-      getUserData();
+      if (isJwtExpired(localStorage.getItem("accessToken"))) {
+        localStorage.removeItem("accessToken");
+      } else {
+        const user = jwt_decode(localStorage.getItem("accessToken"));
+        console.log(user);
+      }
     } else {
       localStorage.removeItem("accessToken");
       router.replace("/auth");

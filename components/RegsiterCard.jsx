@@ -4,47 +4,67 @@ import { Button, Card } from "react-bootstrap";
 import { useRouter } from "next/router";
 import githubLogo from "../imgs/github.png";
 import googleLogo from "../imgs/google.png";
+import {
+  GithubAuthProvider,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  signInWithCredential,
+  fetchSignInMethodsForEmail,
+} from "firebase/auth";
+import { auth } from "../firebase";
 
 function RegsiterCard({ switchFn }) {
   const router = useRouter();
-  const [state, setState] = useState(false);
-  const githubLogin = () => {
-    let client_id = "";
-    if (
-      location.hostname === "localhost" ||
-      location.hostname === "127.0.0.1"
-    ) {
-      client_id = "cee6f3a04095d48f4644";
-    } else {
-      client_id = "1af427681a99198952e7";
+
+  const githubLogin = async () => {
+    try {
+      const provider = new GithubAuthProvider();
+      const res = await signInWithPopup(auth, provider);
+      if (!res) {
+        throw new Error("Could not complete signup");
+      }
+      const user = res.user;
+      if (user.accessToken) {
+        localStorage.setItem("accessToken", user.accessToken);
+        router.replace("/dashboard");
+      } else {
+        localStorage.removeItem("accessToken");
+      }
+    } catch (err) {
+      if (err.code === "auth/account-exists-with-different-credential") {
+        googleLogin();
+      } else {
+        localStorage.removeItem("accessToken");
+      }
     }
-    window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=" +
-        process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID
-    );
   };
-  const getAccessToken = async (code) => {
-    const res = await axios.get("/api/getAccessToken?code=" + code);
-    if (res.data.data.access_token) {
-      localStorage.setItem("accessToken", res.data.data.access_token);
-      router.replace("/dashboard");
-    } else {
+
+  const googleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const res = await signInWithPopup(auth, provider);
+      if (!res) {
+        throw new Error("Could not complete signup");
+      }
+
+      const user = res.user;
+      if (user.accessToken) {
+        localStorage.setItem("accessToken", user.accessToken);
+        router.replace("/dashboard");
+      } else {
+        localStorage.removeItem("accessToken");
+      }
+    } catch (err) {
+      localStorage.removeItem("accessToken");
     }
   };
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const code = urlParams.get("code");
-    if (code && localStorage.getItem("accessToken") === null) {
-      getAccessToken(code);
-      setState(!state);
-    } else if (localStorage.getItem("accessToken") !== null) {
-      router.replace("/dashboard");
-    }
-  }, []);
   return (
     <Card className="w-100 bg-transparent p-2">
-      <Card.Body className="d-flex flex-column align-items-center">
+      <Card.Body
+        className="d-flex flex-column align-items-center"
+        id="logindiv"
+      >
         <Card.Title
           className="fs-1 gradient-text mb-4"
           style={{ fontFamily: "regular" }}
@@ -70,6 +90,7 @@ function RegsiterCard({ switchFn }) {
         <Button
           onClick={(e) => {
             e.preventDefault();
+            googleLogin();
           }}
           className="d-flex flex-row align-items-center"
           style={{ gap: "10px", fontFamily: "regular" }}
