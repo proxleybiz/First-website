@@ -19,7 +19,8 @@ function RegsiterCard({ switchFn }) {
       client_id = "1af427681a99198952e7";
     }
     window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=" + client_id
+      "https://github.com/login/oauth/authorize?client_id=" +
+        process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID
     );
   };
   const getAccessToken = async (code) => {
