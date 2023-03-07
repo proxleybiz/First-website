@@ -9,8 +9,17 @@ function RegsiterCard({ switchFn }) {
   const router = useRouter();
   const [state, setState] = useState(false);
   const githubLogin = () => {
+    const client_id = "";
+    if (
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1"
+    ) {
+      client_id = "cee6f3a04095d48f4644";
+    } else {
+      client_id = "1af427681a99198952e7";
+    }
     window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=cee6f3a04095d48f4644"
+      "https://github.com/login/oauth/authorize?client_id=" + client_id
     );
   };
   const getAccessToken = async (code) => {
