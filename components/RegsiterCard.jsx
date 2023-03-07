@@ -9,7 +9,7 @@ function RegsiterCard({ switchFn }) {
   const router = useRouter();
   const [state, setState] = useState(false);
   const githubLogin = () => {
-    const client_id = "";
+    let client_id = "";
     if (
       location.hostname === "localhost" ||
       location.hostname === "127.0.0.1"
