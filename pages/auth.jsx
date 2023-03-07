@@ -1,9 +1,14 @@
 import Head from "next/head";
 import React, { useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import LoginCard from "../components/LoginCard";
+const LoginCard = dynamic(() => import("../components/LoginCard"), {
+  ssr: false,
+});
 import MyNavbar from "../components/MyNavbar";
-import RegsiterCard from "../components/RegsiterCard";
+import dynamic from "next/dynamic";
+const RegsiterCard = dynamic(() => import("../components/RegsiterCard"), {
+  ssr: false,
+});
 
 function Auth() {
   const [state, setState] = useState(1);
