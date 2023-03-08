@@ -4,6 +4,12 @@ import githubLogo from "../imgs/github.png";
 import googleLogo from "../imgs/google.png";
 import userContext from "../context/user/userContext";
 import { useRouter } from "next/router";
+import {
+  GithubAuthProvider,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { auth } from "../firebase";
 
 function LoginCard({ switchFn }) {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -23,6 +29,45 @@ function LoginCard({ switchFn }) {
         setLoading(false);
       }
     );
+  };
+
+  const githubLogin = async () => {
+    try {
+      const provider = new GithubAuthProvider();
+      const res = await signInWithPopup(auth, provider);
+      if (!res) {
+        throw new Error("Could not complete signup");
+      }
+      const user = res.user;
+      if (user.accessToken) {
+        localStorage.setItem("accessToken", user.accessToken);
+        router.replace("/dashboard");
+      } else {
+        localStorage.removeItem("accessToken");
+      }
+    } catch (err) {
+      localStorage.removeItem("accessToken");
+    }
+  };
+
+  const googleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const res = await signInWithPopup(auth, provider);
+      if (!res) {
+        throw new Error("Could not complete signup");
+      }
+
+      const user = res.user;
+      if (user.accessToken) {
+        localStorage.setItem("accessToken", user.accessToken);
+        router.replace("/dashboard");
+      } else {
+        localStorage.removeItem("accessToken");
+      }
+    } catch (err) {
+      localStorage.removeItem("accessToken");
+    }
   };
   return (
     <Card className="w-100 bg-transparent p-2">
@@ -68,7 +113,7 @@ function LoginCard({ switchFn }) {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            //githubLogin();
+            githubLogin();
           }}
           className="d-flex flex-row align-items-center mb-4"
           style={{ gap: "10px", fontFamily: "regular" }}
@@ -84,7 +129,7 @@ function LoginCard({ switchFn }) {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            //googleLogin();
+            googleLogin();
           }}
           className="d-flex flex-row align-items-center"
           style={{ gap: "10px", fontFamily: "regular" }}
