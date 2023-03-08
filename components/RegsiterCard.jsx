@@ -8,14 +8,19 @@ import {
   GithubAuthProvider,
   signInWithPopup,
   GoogleAuthProvider,
-  signOut,
-  signInWithCredential,
-  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { auth } from "../firebase";
 
 function RegsiterCard({ switchFn }) {
   const router = useRouter();
+  useEffect(() => {
+    if (
+      localStorage.getItem("accessToken") !== null &&
+      localStorage.getItem("accessToken") !== undefined
+    ) {
+      router.replace("/dashboard");
+    }
+  }, []);
 
   const githubLogin = async () => {
     try {
@@ -32,11 +37,7 @@ function RegsiterCard({ switchFn }) {
         localStorage.removeItem("accessToken");
       }
     } catch (err) {
-      if (err.code === "auth/account-exists-with-different-credential") {
-        googleLogin();
-      } else {
-        localStorage.removeItem("accessToken");
-      }
+      localStorage.removeItem("accessToken");
     }
   };
 

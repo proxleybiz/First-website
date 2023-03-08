@@ -1,30 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { Container } from "react-bootstrap";
 import MyNavbar from "../../../components/MyNavbar";
 import { isJwtExpired } from "jwt-check-expiration";
 import jwt_decode from "jwt-decode";
+import Head from "next/head";
+import userContext from "../../../context/user/userContext";
 
 function DashboardMain() {
   const router = useRouter();
-  useEffect(() => {
-    if (
-      localStorage.getItem("accessToken") !== null &&
-      localStorage.getItem("accessToken") !== undefined
-    ) {
-      if (isJwtExpired(localStorage.getItem("accessToken"))) {
+  const userCtx = useContext(userContext);
+  const [loading, setLoading] = useState(false);
+  const getUser = () => {
+    setLoading(true);
+    userCtx.getUser(
+      () => {
+        setLoading(false);
+      },
+      (err) => {
+        setLoading(false);
         localStorage.removeItem("accessToken");
-      } else {
-        const user = jwt_decode(localStorage.getItem("accessToken"));
-        console.log(user);
+        router.replace("/auth");
       }
-    } else {
-      localStorage.removeItem("accessToken");
-      router.replace("/auth");
-    }
+    );
+  };
+  useEffect(() => {
+    getUser();
   }, []);
   return (
     <Container fluid className="min-vh-100">
+      <Head>
+        <title> Dashboard | Proxley </title>
+      </Head>
       <MyNavbar />
     </Container>
   );
