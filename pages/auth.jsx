@@ -11,7 +11,7 @@ const RegsiterCard = dynamic(() => import("../components/RegsiterCard"), {
 });
 
 function Auth() {
-  const [state, setState] = useState(1);
+  const [state, setState] = useState(0);
   const switchFn = (e) => {
     e.preventDefault();
     setState(!state);

@@ -49,9 +49,30 @@ function UserState(props) {
       }
     }
   };
+
+  const login = async (data, success = null, error = null) => {
+    try {
+      const res = await axios.post("/api/getUser", { ...data }, config);
+      if (res.data.status) {
+        localStorage.setItem("accessToken", res.data.data);
+        if (success) {
+          success();
+        }
+      } else {
+        localStorage.removeItem("accessToken");
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
   return (
     <UserContext.Provider
-      value={{ user: state.user, loading: state.loading, getUser }}
+      value={{ user: state.user, loading: state.loading, getUser, login }}
     >
       {props.children}
     </UserContext.Provider>
