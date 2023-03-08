@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useRouter } from "next/router";
-import { Container } from "react-bootstrap";
+import { Container, Tab, Tabs } from "react-bootstrap";
 import MyNavbar from "../../../components/MyNavbar";
 import { isJwtExpired } from "jwt-check-expiration";
 import jwt_decode from "jwt-decode";
@@ -11,6 +11,8 @@ function DashboardMain() {
   const router = useRouter();
   const userCtx = useContext(userContext);
   const [loading, setLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("profile");
+  const [selectedComponent, setSelectedComponent] = useState(null);
   const getUser = () => {
     setLoading(true);
     userCtx.getUser(
@@ -27,12 +29,28 @@ function DashboardMain() {
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    switch (selectedTab) {
+    }
+  }, [selectedTab]);
   return (
     <Container fluid className="min-vh-100">
       <Head>
         <title> Dashboard | Proxley </title>
       </Head>
       <MyNavbar />
+      <Tabs
+        style={{ fontFamily: "regular", width: "fit-content" }}
+        className="border-0 mx-auto"
+        onSelect={(e) => {
+          setSelectedTab(e);
+        }}
+      >
+        <Tab eventKey="profile" title="Profile"></Tab>
+        <Tab eventKey="orders" title="Orders"></Tab>
+        <Tab eventKey="dashboard" title="Dashboard"></Tab>
+      </Tabs>
     </Container>
   );
 }
