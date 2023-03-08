@@ -52,7 +52,7 @@ function UserState(props) {
 
   const login = async (data, success = null, error = null) => {
     try {
-      const res = await axios.post("/api/getUser", { ...data }, config);
+      const res = await axios.post("/api/login", { ...data }, config);
       if (res.data.status) {
         localStorage.setItem("accessToken", res.data.data);
         if (success) {

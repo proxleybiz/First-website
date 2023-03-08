@@ -38,7 +38,7 @@ function LoginCard({ switchFn }) {
             type="email"
             placeholder="Enter email"
             value={credentials.email}
-            onClick={(e) => {
+            onChange={(e) => {
               setCredentials({ ...credentials, email: e.target.value });
             }}
           />
@@ -49,7 +49,7 @@ function LoginCard({ switchFn }) {
             type="password"
             placeholder="Password"
             value={credentials.password}
-            onClick={(e) => {
+            onChange={(e) => {
               setCredentials({ ...credentials, password: e.target.value });
             }}
           />
@@ -57,6 +57,10 @@ function LoginCard({ switchFn }) {
         <Button
           className="btn-hover w-100 mb-3"
           style={{ fontFamily: "regular" }}
+          onClick={(e) => {
+            e.preventDefault();
+            login();
+          }}
         >
           LOGIN
         </Button>
