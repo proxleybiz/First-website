@@ -1,11 +1,11 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { Container, Tab, Tabs } from "react-bootstrap";
-import MyNavbar from "../../../components/MyNavbar";
+import MyNavbar from "./MyNavbar";
 import { isJwtExpired } from "jwt-check-expiration";
 import jwt_decode from "jwt-decode";
 import Head from "next/head";
-import userContext from "../../../context/user/userContext";
+import userContext from "../context/user/userContext";
 import dynamic from "next/dynamic";
 const MobileVerification = dynamic(() => import("./mobileVerification"), {
   ssr: false,

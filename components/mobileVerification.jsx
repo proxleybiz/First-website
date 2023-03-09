@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import Loading from "../../../components/Loading";
+import Loading from "./Loading";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from "../../../firebase";
-import userContext from "../../../context/user/userContext";
+import { auth } from "../firebase";
+import userContext from "../context/user/userContext";
 
 function MobileVerification() {
   const [phone, setPhone] = useState("");
