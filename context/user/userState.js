@@ -70,9 +70,46 @@ function UserState(props) {
       }
     }
   };
+
+  const verifyNumber = async (phone, success = null, error = null) => {
+    try {
+      if (
+        localStorage.getItem("accessToken") === null ||
+        localStorage.getItem("accessToken") === undefined
+      ) {
+        if (error) {
+          error("Invalid Token");
+        }
+        return;
+      } else {
+        setAuthToken(localStorage.getItem("accessToken"));
+      }
+      const res = await axios.post("/api/verifyNumber", { phone }, config);
+      if (res.data.status) {
+        dispatch({ type: GET_USER, payload: res.data.data });
+        if (success) {
+          success();
+        }
+      } else {
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
   return (
     <UserContext.Provider
-      value={{ user: state.user, loading: state.loading, getUser, login }}
+      value={{
+        user: state.user,
+        loading: state.loading,
+        getUser,
+        login,
+        verifyNumber,
+      }}
     >
       {props.children}
     </UserContext.Provider>

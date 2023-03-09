@@ -11,7 +11,7 @@ const RegsiterCard = dynamic(() => import("../components/RegsiterCard"), {
 });
 
 function Auth() {
-  const [state, setState] = useState(0);
+  const [state, setState] = useState(1);
   const switchFn = (e) => {
     e.preventDefault();
     setState(!state);
@@ -21,7 +21,7 @@ function Auth() {
       <Head>
         <title> Authentication | Proxley </title>
       </Head>
-      <MyNavbar auth={true} />
+      <MyNavbar mode={2} />
       <Container className="my-auto">
         <Row className="justify-content-center">
           <Col lg={4} sm={12}>

@@ -6,6 +6,10 @@ import { isJwtExpired } from "jwt-check-expiration";
 import jwt_decode from "jwt-decode";
 import Head from "next/head";
 import userContext from "../../../context/user/userContext";
+import dynamic from "next/dynamic";
+const MobileVerification = dynamic(() => import("./mobileVerification"), {
+  ssr: false,
+});
 
 function DashboardMain() {
   const router = useRouter();
@@ -39,18 +43,24 @@ function DashboardMain() {
       <Head>
         <title> Dashboard | Proxley </title>
       </Head>
-      <MyNavbar />
-      <Tabs
-        style={{ fontFamily: "regular", width: "fit-content" }}
-        className="border-0 mx-auto"
-        onSelect={(e) => {
-          setSelectedTab(e);
-        }}
-      >
-        <Tab eventKey="profile" title="Profile"></Tab>
-        <Tab eventKey="orders" title="Orders"></Tab>
-        <Tab eventKey="dashboard" title="Dashboard"></Tab>
-      </Tabs>
+      <MyNavbar mode={1} />
+      {userCtx.user && userCtx.user.phoneNumber.trim() !== "" ? (
+        <>
+          <Tabs
+            style={{ fontFamily: "regular", width: "fit-content" }}
+            className="border-0 mx-auto"
+            onSelect={(e) => {
+              setSelectedTab(e);
+            }}
+          >
+            <Tab eventKey="profile" title="Profile"></Tab>
+            <Tab eventKey="orders" title="Orders"></Tab>
+            <Tab eventKey="dashboard" title="Dashboard"></Tab>
+          </Tabs>
+        </>
+      ) : (
+        <MobileVerification />
+      )}
     </Container>
   );
 }
