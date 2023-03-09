@@ -82,7 +82,7 @@ function MobileVerification() {
                 <Form.Group>
                   <Form.Control
                     type="text"
-                    placeholder="Enter OTP"
+                    placeholder={mode ? "Enter OTP" : "Enter Phone Number"}
                     value={mode ? otp : phone}
                     style={{ fontFamily: "regular" }}
                     onChange={(e) => {
