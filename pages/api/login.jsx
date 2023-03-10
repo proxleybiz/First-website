@@ -8,7 +8,9 @@ const func = async (req, res) => {
   try {
     await dbConnect();
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ email }, { phoneNumber: email }],
+    });
     if (!user) {
       return res.json(resObj(false, null, "No User Found"));
     }

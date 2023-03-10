@@ -81,7 +81,7 @@ function LoginCard({ switchFn }) {
         <Form.Group className="mb-3 w-100">
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder="Enter Email / Mobile Number"
             value={credentials.email}
             onChange={(e) => {
               setCredentials({ ...credentials, email: e.target.value });

@@ -1,12 +1,11 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, Fragment } from "react";
 import { useRouter } from "next/router";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import MyNavbar from "./MyNavbar";
-import { isJwtExpired } from "jwt-check-expiration";
-import jwt_decode from "jwt-decode";
 import Head from "next/head";
 import userContext from "../context/user/userContext";
 import dynamic from "next/dynamic";
+import Loading from "./Loading";
 const MobileVerification = dynamic(() => import("./mobileVerification"), {
   ssr: false,
 });
@@ -44,22 +43,28 @@ function DashboardMain() {
         <title> Dashboard | Proxley </title>
       </Head>
       <MyNavbar mode={1} />
-      {userCtx.user && userCtx.user.phoneNumber.trim() !== "" ? (
-        <>
-          <Tabs
-            style={{ fontFamily: "regular", width: "fit-content" }}
-            className="border-0 mx-auto"
-            onSelect={(e) => {
-              setSelectedTab(e);
-            }}
-          >
-            <Tab eventKey="profile" title="Profile"></Tab>
-            <Tab eventKey="orders" title="Orders"></Tab>
-            <Tab eventKey="dashboard" title="Dashboard"></Tab>
-          </Tabs>
-        </>
+      {loading ? (
+        <Loading />
       ) : (
-        <MobileVerification />
+        <Fragment>
+          {userCtx.user && userCtx.user.phoneNumber.trim() !== "" ? (
+            <>
+              <Tabs
+                style={{ fontFamily: "regular", width: "fit-content" }}
+                className="border-0 mx-auto"
+                onSelect={(e) => {
+                  setSelectedTab(e);
+                }}
+              >
+                <Tab eventKey="profile" title="Profile"></Tab>
+                <Tab eventKey="orders" title="Orders"></Tab>
+                <Tab eventKey="dashboard" title="Dashboard"></Tab>
+              </Tabs>
+            </>
+          ) : (
+            <MobileVerification />
+          )}
+        </Fragment>
       )}
     </Container>
   );
