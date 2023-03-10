@@ -7,7 +7,11 @@ const func = async (req, res) => {
   try {
     await dbConnect();
     await authenticatedRequest(req, res);
-    const user = await User.findById(req.user._id);
+    let user = await User.findOne({ phoneNumber: phone });
+    if (user) {
+      return res.json(resObj(false, null, "Mobile Already Regsitered"));
+    }
+    user = await User.findById(req.user._id);
     user.phoneNumber = req.body.phone;
     await user.save();
     return res.json(resObj(true, user, "Phone Verified"));

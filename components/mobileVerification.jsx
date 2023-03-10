@@ -51,6 +51,7 @@ function MobileVerification() {
           setLoading(false);
         },
         (err) => {
+          alert(err);
           setLoading(false);
         }
       );
