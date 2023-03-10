@@ -7,7 +7,7 @@ const func = async (req, res) => {
   try {
     await dbConnect();
     await authenticatedRequest(req, res);
-    let user = await User.findOne({ phoneNumber: phone });
+    let user = await User.findOne({ phoneNumber: req.body.phone });
     if (user) {
       return res.json(resObj(false, null, "Mobile Already Regsitered"));
     }

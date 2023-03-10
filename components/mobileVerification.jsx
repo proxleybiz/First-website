@@ -100,8 +100,18 @@ function MobileVerification() {
                   className="w-100 my-2 text-white border-0"
                   style={{ fontFamily: "bold", background: "#2160fd" }}
                 >
-                  Verify OTP
+                  {mode ? "Verify OTP" : "Send OTP"}
                 </Button>
+                {mode && (
+                  <Button
+                    onClick={signIn}
+                    className="w-100 my-2 text-white border-0"
+                    style={{ fontFamily: "bold" }}
+                    variant="success"
+                  >
+                    {"Resend OTP"}
+                  </Button>
+                )}
               </Card.Body>
             </Card>
           )}

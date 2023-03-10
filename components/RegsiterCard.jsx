@@ -25,6 +25,7 @@ function RegsiterCard({ switchFn }) {
   const githubLogin = async () => {
     try {
       const provider = new GithubAuthProvider();
+      provider.addScope()
       const res = await signInWithPopup(auth, provider);
       if (!res) {
         throw new Error("Could not complete signup");
