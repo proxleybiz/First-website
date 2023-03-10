@@ -25,7 +25,7 @@ function RegsiterCard({ switchFn }) {
   const githubLogin = async () => {
     try {
       const provider = new GithubAuthProvider();
-      provider.addScope()
+      provider.addScope();
       const res = await signInWithPopup(auth, provider);
       if (!res) {
         throw new Error("Could not complete signup");
@@ -38,6 +38,9 @@ function RegsiterCard({ switchFn }) {
         localStorage.removeItem("accessToken");
       }
     } catch (err) {
+      if (err.code === "auth/account-exists-with-different-credential") {
+        alert("Please continue with Google with the same email.");
+      }
       localStorage.removeItem("accessToken");
     }
   };
