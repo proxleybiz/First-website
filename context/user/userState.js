@@ -33,7 +33,8 @@ function UserState(props) {
       }
       const res = await axios.get("/api/getUser", config);
       if (res.data.status) {
-        dispatch({ type: GET_USER, payload: res.data.data });
+        dispatch({ type: GET_USER, payload: res.data.data.user });
+        localStorage.setItem("accessToken", res.data.data.token);
         if (success) {
           success();
         }
@@ -101,6 +102,38 @@ function UserState(props) {
       }
     }
   };
+
+  const updatePassword = async (password, success = null, error = null) => {
+    try {
+      if (
+        localStorage.getItem("accessToken") === null ||
+        localStorage.getItem("accessToken") === undefined
+      ) {
+        if (error) {
+          error("Invalid Token");
+        }
+        return;
+      } else {
+        setAuthToken(localStorage.getItem("accessToken"));
+      }
+      const res = await axios.post("/api/updatePassword", { password }, config);
+      if (res.data.status) {
+        dispatch({ type: GET_USER, payload: res.data.data });
+        if (success) {
+          success();
+        }
+      } else {
+        localStorage.removeItem("accessToken");
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
   return (
     <UserContext.Provider
       value={{
@@ -109,6 +142,7 @@ function UserState(props) {
         getUser,
         login,
         verifyNumber,
+        updatePassword,
       }}
     >
       {props.children}

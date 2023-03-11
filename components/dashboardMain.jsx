@@ -1,11 +1,19 @@
 import React, { useEffect, useContext, useState, Fragment } from "react";
 import { useRouter } from "next/router";
-import { Container, Tab, Tabs } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  Row,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import MyNavbar from "./MyNavbar";
 import Head from "next/head";
 import userContext from "../context/user/userContext";
 import dynamic from "next/dynamic";
 import Loading from "./Loading";
+const Profile = dynamic(() => import("./profile"), { ssr: false });
 const MobileVerification = dynamic(() => import("./mobileVerification"), {
   ssr: false,
 });
@@ -14,13 +22,16 @@ function DashboardMain() {
   const router = useRouter();
   const userCtx = useContext(userContext);
   const [loading, setLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("profile");
+  const [selectedTab, setSelectedTab] = useState("");
   const [selectedComponent, setSelectedComponent] = useState(null);
+  const [renderElement, setRenderElement] = useState(null);
+  const tabs = ["Profile", "Dashboard", "Orders"];
   const getUser = () => {
     setLoading(true);
     userCtx.getUser(
       () => {
         setLoading(false);
+        setSelectedTab("Profile");
       },
       (err) => {
         setLoading(false);
@@ -35,6 +46,14 @@ function DashboardMain() {
 
   useEffect(() => {
     switch (selectedTab) {
+      case "Profile":
+        {
+          setRenderElement(<Profile />);
+        }
+        break;
+      default: {
+        setRenderElement(null);
+      }
     }
   }, [selectedTab]);
   return (
@@ -49,17 +68,36 @@ function DashboardMain() {
         <Fragment>
           {userCtx.user && userCtx.user.phoneNumber.trim() !== "" ? (
             <>
-              <Tabs
-                style={{ fontFamily: "regular", width: "fit-content" }}
-                className="border-0 mx-auto"
-                onSelect={(e) => {
-                  setSelectedTab(e);
-                }}
-              >
-                <Tab eventKey="profile" title="Profile"></Tab>
-                <Tab eventKey="orders" title="Orders"></Tab>
-                <Tab eventKey="dashboard" title="Dashboard"></Tab>
-              </Tabs>
+              <Row className="justify-content-center">
+                <ButtonGroup
+                  size="lg"
+                  className="mt-2 mb-4 mx-auto"
+                  style={{ width: "fit-content" }}
+                >
+                  {tabs.map((tab, key) => {
+                    return (
+                      <Button
+                        key={key}
+                        className="border-0 fs-5"
+                        style={{
+                          background:
+                            tab === selectedTab
+                              ? "#2160fd"
+                              : "rgba(255,255,255,0.2)",
+                          fontFamily: "regular",
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedTab(tab);
+                        }}
+                      >
+                        {tab}
+                      </Button>
+                    );
+                  })}
+                </ButtonGroup>
+              </Row>
+              {renderElement}
             </>
           ) : (
             <MobileVerification />

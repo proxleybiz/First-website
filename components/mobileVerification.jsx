@@ -102,7 +102,7 @@ function MobileVerification() {
                 >
                   {mode ? "Verify OTP" : "Send OTP"}
                 </Button>
-                {mode && (
+                {mode ? (
                   <Button
                     onClick={signIn}
                     className="w-100 my-2 text-white border-0"
@@ -111,7 +111,7 @@ function MobileVerification() {
                   >
                     {"Resend OTP"}
                   </Button>
-                )}
+                ) : null}
               </Card.Body>
             </Card>
           )}

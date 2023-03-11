@@ -9,7 +9,7 @@ const func = async (req, res) => {
     await dbConnect();
     const { email, password } = req.body;
     const user = await User.findOne({
-      $or: [{ email }, { phoneNumber: email }],
+      $or: [{ email }, { phoneNumber: "+91" + email }],
     });
     if (!user) {
       return res.json(resObj(false, null, "No User Found"));
@@ -23,7 +23,7 @@ const func = async (req, res) => {
     }
     delete user.password;
     const payload = {
-      exp: Math.floor(Date.now() / 1000) + 1 * 24 * 60 * 60,
+      exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
       email: user.email,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET);
