@@ -1,7 +1,7 @@
 import authenticatedRequest from "../../utils/authenticatedRequest";
 import dbConnect from "../../utils/dbConnect";
 import resObj from "../../utils/resObj";
-const jwt = require("jsonwebtoken");
+import Order from "../../models/orders";
 
 const func = async (req, res) => {
   try {
@@ -10,12 +10,8 @@ const func = async (req, res) => {
     if (!auth.res) {
       return res.json(resObj(false, null, auth.msg));
     }
-    const payload = {
-      exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
-      email: req.user.email,                    
-    };
-    const token = jwt.sign(payload, process.env.JWT_SECRET);
-    return res.json(resObj(true, { user: req.user, token }, "User Loaded"));
+    const orders = await Order.find({ userId: req.user._id });
+    return res.json(resObj(true, orders, "Orders Loaded"));
   } catch (err) {
     return res.json(resObj(false, null, err.toString()));
   }

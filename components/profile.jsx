@@ -52,10 +52,10 @@ function Profile() {
               style={{ background: "rgba(255,255,255,0.2)" }}
             >
               <Card.Body
-                className="d-flex flex-column align-items-center"
+                className="d-flex flex-column align-items-start"
                 style={{ gap: "1rem" }}
               >
-                <Row>
+                <Row className="w-100 justify-content-center">
                   <h1
                     className="fs-2 text-white"
                     style={{ fontFamily: "bold", width: "fit-content" }}
@@ -91,8 +91,7 @@ function Profile() {
                   style={{ fontFamily: "regular" }}
                 />
                 <Button
-                  variant="success"
-                  style={{ fontFamily: "regular" }}
+                  style={{ fontFamily: "regular", background: "#2160fd" }}
                   onClick={(e) => {
                     e.preventDefault();
                     setShow(true);

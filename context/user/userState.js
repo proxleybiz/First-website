@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useReducer } from "react";
 import setAuthToken from "../../utils/setAccessToken";
-import { GET_USER } from "../types";
+import { GET_ORDERS, GET_USER } from "../types";
 import UserContext from "./userContext";
 import userReducer from "./userReducer";
 
@@ -9,6 +9,7 @@ function UserState(props) {
   let initialState = {
     user: null,
     loading: false,
+    orders: [],
   };
   const config = {
     headers: {
@@ -134,15 +135,48 @@ function UserState(props) {
       }
     }
   };
+
+  const getOrders = async (success = null, error = null) => {
+    try {
+      if (
+        localStorage.getItem("accessToken") === null ||
+        localStorage.getItem("accessToken") === undefined
+      ) {
+        if (error) {
+          error("Invalid Token");
+        }
+        return;
+      } else {
+        setAuthToken(localStorage.getItem("accessToken"));
+      }
+      const res = await axios.get("/api/getOrders", config);
+      if (res.data.status) {
+        dispatch({ type: GET_ORDERS, payload: res.data.data });
+        if (success) {
+          success();
+        }
+      } else {
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
   return (
     <UserContext.Provider
       value={{
         user: state.user,
         loading: state.loading,
+        orders: state.orders,
         getUser,
         login,
         verifyNumber,
         updatePassword,
+        getOrders,
       }}
     >
       {props.children}

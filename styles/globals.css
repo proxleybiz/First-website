@@ -72,3 +72,7 @@ a {
   color: #2160fd !important;
   font-weight: bold;
 }
+
+.CircularProgressbar-trail {
+  stroke: ghostwhite !important;
+}
