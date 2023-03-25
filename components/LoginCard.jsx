@@ -31,25 +31,6 @@ function LoginCard({ switchFn }) {
     );
   };
 
-  const githubLogin = async () => {
-    try {
-      const provider = new GithubAuthProvider();
-      const res = await signInWithPopup(auth, provider);
-      if (!res) {
-        throw new Error("Could not complete signup");
-      }
-      const user = res.user;
-      if (user.accessToken) {
-        localStorage.setItem("accessToken", user.accessToken);
-        router.replace("/dashboard");
-      } else {
-        localStorage.removeItem("accessToken");
-      }
-    } catch (err) {
-      localStorage.removeItem("accessToken");
-    }
-  };
-
   const googleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -110,22 +91,6 @@ function LoginCard({ switchFn }) {
           LOGIN
         </Button>
         <p className="w-100 text-center fs-6 text-light"> OR </p>
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            githubLogin();
-          }}
-          className="d-flex flex-row align-items-center mb-4"
-          style={{ gap: "10px", fontFamily: "regular" }}
-          variant="dark"
-        >
-          <img
-            src={githubLogo.src}
-            style={{ height: "30px", width: "30px" }}
-            className="bg-light rounded-circle p-0"
-          />
-          Continue with Github
-        </Button>
         <Button
           onClick={(e) => {
             e.preventDefault();

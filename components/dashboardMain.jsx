@@ -14,6 +14,7 @@ import userContext from "../context/user/userContext";
 import dynamic from "next/dynamic";
 import Loading from "./Loading";
 import Orders from "./orders";
+const Dashboard = dynamic(() => import("./dashboard"), {ssr:false});
 const Profile = dynamic(() => import("./profile"), { ssr: false });
 const MobileVerification = dynamic(() => import("./mobileVerification"), {
   ssr: false,
@@ -32,7 +33,7 @@ function DashboardMain() {
     userCtx.getUser(
       () => {
         setLoading(false);
-        setSelectedTab("Orders");
+        setSelectedTab("Dashboard");
       },
       (err) => {
         setLoading(false);
@@ -55,6 +56,11 @@ function DashboardMain() {
       case "Orders":
         {
           setRenderElement(<Orders />);
+        }
+        break;
+      case "Dashboard":
+        {
+          setRenderElement(<Dashboard />);
         }
         break;
       default: {

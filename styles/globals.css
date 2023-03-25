@@ -76,3 +76,7 @@ a {
 .CircularProgressbar-trail {
   stroke: ghostwhite !important;
 }
+
+.hover-select:hover {
+  cursor: pointer;
+}

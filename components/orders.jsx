@@ -6,7 +6,7 @@ import filterimg from "../imgs/filter.png";
 function Orders() {
   const [filter, setFilter] = useState("");
   return (
-    <Container className="container-md">
+    <Container className="container-lg">
       <InputGroup className="mb-3">
         <InputGroup.Text id="basic-addon1">
           <img src={filterimg.src} style={{ height: "20px" }} />

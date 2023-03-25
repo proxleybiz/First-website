@@ -113,7 +113,6 @@ function Profile() {
                 <UpdatePasswordModal
                   show={show}
                   handleClose={(e) => {
-                    e.preventDefault();
                     setShow(false);
                     setPassword({
                       newPassword: "",

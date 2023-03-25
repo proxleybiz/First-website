@@ -14,8 +14,35 @@ const UserSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
   },
-  orders: [],
-  address: [],
+  orders: [{ type: String }],
+  address: [
+    {
+      addressTitle: {
+        type: String,
+      },
+      lineOne: {
+        type: String,
+      },
+      lineTwo: {
+        type: String,
+      },
+      landmark: {
+        type: String,
+      },
+      pincode: {
+        tupe: String,
+      },
+      city: {
+        type: String,
+      },
+      state: {
+        type: String,
+      },
+      country: {
+        type: String,
+      },
+    },
+  ],
   password: {
     type: String,
   },

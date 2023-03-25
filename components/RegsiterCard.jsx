@@ -22,29 +22,6 @@ function RegsiterCard({ switchFn }) {
     }
   }, []);
 
-  const githubLogin = async () => {
-    try {
-      const provider = new GithubAuthProvider();
-      provider.addScope();
-      const res = await signInWithPopup(auth, provider);
-      if (!res) {
-        throw new Error("Could not complete signup");
-      }
-      const user = res.user;
-      if (user.accessToken) {
-        localStorage.setItem("accessToken", user.accessToken);
-        router.replace("/dashboard");
-      } else {
-        localStorage.removeItem("accessToken");
-      }
-    } catch (err) {
-      if (err.code === "auth/account-exists-with-different-credential") {
-        alert("Please continue with Google with the same email.");
-      }
-      localStorage.removeItem("accessToken");
-    }
-  };
-
   const googleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -76,22 +53,6 @@ function RegsiterCard({ switchFn }) {
         >
           Get Started
         </Card.Title>
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            githubLogin();
-          }}
-          className="d-flex flex-row align-items-center mb-4"
-          style={{ gap: "10px", fontFamily: "regular" }}
-          variant="dark"
-        >
-          <img
-            src={githubLogo.src}
-            style={{ height: "30px", width: "30px" }}
-            className="bg-light rounded-circle p-0"
-          />
-          Continue with Github
-        </Button>
         <Button
           onClick={(e) => {
             e.preventDefault();
