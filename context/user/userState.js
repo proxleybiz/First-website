@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useReducer } from "react";
 import setAuthToken from "../../utils/setAccessToken";
-import { GET_ORDERS, GET_USER } from "../types";
+import { ADD_ORDERS, GET_ORDERS, GET_USER } from "../types";
 import UserContext from "./userContext";
 import userReducer from "./userReducer";
 
@@ -166,6 +166,75 @@ function UserState(props) {
       }
     }
   };
+
+  const validateOrder = async (data, success = null, error = null) => {
+    try {
+      if (
+        localStorage.getItem("accessToken") === null ||
+        localStorage.getItem("accessToken") === undefined
+      ) {
+        if (error) {
+          error("Invalid Token");
+        }
+        return;
+      } else {
+        setAuthToken(localStorage.getItem("accessToken"));
+      }
+      const res = await axios.post(
+        "/api/validateOrder",
+        { id: data.id, payment: data.payment },
+        config
+      );
+      if (res.data.status) {
+        dispatch({ type: ADD_ORDERS, payload: res.data.data });
+        if (success) {
+          success();
+        }
+      } else {
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
+
+  const fetchOrderDetails = async (id, success = null, error = null) => {
+    try {
+      if (
+        localStorage.getItem("accessToken") === null ||
+        localStorage.getItem("accessToken") === undefined
+      ) {
+        if (error) {
+          error("Invalid Token");
+        }
+        return;
+      } else {
+        setAuthToken(localStorage.getItem("accessToken"));
+      }
+      const res = await axios.post(
+        "/api/fetchOrderDetails",
+        { id: id },
+        config
+      );
+      if (res.data.status) {
+        if (success) {
+          success(res.data.data);
+        }
+      } else {
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
   return (
     <UserContext.Provider
       value={{
@@ -177,6 +246,8 @@ function UserState(props) {
         verifyNumber,
         updatePassword,
         getOrders,
+        validateOrder,
+        fetchOrderDetails,
       }}
     >
       {props.children}

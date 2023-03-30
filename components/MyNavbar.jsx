@@ -16,19 +16,9 @@ function MyNavbar({ mode = 0 }) {
         >
           Proxley
         </Navbar.Brand>
-        <Nav className="me-auto">
-          {mode === 0 ||
-            (mode === 1 && (
-              <Nav.Link
-                className="text-light pb-0 fs-5"
-                style={{ fontFamily: "regular" }}
-              >
-                Pricing
-              </Nav.Link>
-            ))}
-        </Nav>
+        <Nav className="me-auto"></Nav>
 
-        {mode === 0 && (
+        {mode === 0 ? (
           <Nav.Link
             className="btn py-2 px-4 br-2 fs-6 d-flex flex-row justify-content-center btn-hover"
             style={{ fontFamily: "regular" }}
@@ -36,6 +26,16 @@ function MyNavbar({ mode = 0 }) {
           >
             Get Started <img src={right.src} />
           </Nav.Link>
+        ) : (
+          mode === 1 && (
+            <Nav.Link
+              className="btn py-2 px-4 br-2 fs-6 d-flex flex-row justify-content-center btn-hover"
+              style={{ fontFamily: "regular" }}
+              href="/dashboard"
+            >
+              Go To Dashboard <img src={right.src} />
+            </Nav.Link>
+          )
         )}
       </Container>
     </Navbar>

@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
       },
       pincode: {
-        tupe: String,
+        type: String,
       },
       city: {
         type: String,

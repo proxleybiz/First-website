@@ -22,24 +22,31 @@ function Dashboard() {
   const [show, setShow] = useState(false);
 
   const validateData = () => {
-    /* if (filters.catOne === PACKAGING) {
-      if (filters.catTwo === "" || filters.catThree === "") {
-        return alert("Please select packaging type and format");
-      }
+    if (
+      filters.catOne === "" ||
+      filters.catTwo === "" ||
+      filters.catThree === ""
+    ) {
+      return alert("Please select packaging type and format");
     }
+
     for (let i = 0; i < customization.length; i++) {
       if (customization[i].selectedValue.toString().trim() === "") {
         alert(customization[i].name);
         return;
       }
-    } */
+    }
     setShow(true);
   };
 
   const getSecondFilters = (catOne) => {
     switch (catOne) {
       case PRINTING: {
-        return [];
+        const result = FILTER_TWO.find((i) => i.category === catOne);
+        if (!result) {
+          return [];
+        }
+        return result.items;
       }
       case PACKAGING: {
         const result = FILTER_TWO.find((i) => i.category === catOne);
@@ -125,7 +132,7 @@ function Dashboard() {
             </Col>
           );
         })}
-        {filters.catOne === PACKAGING && (
+        {filters.catOne !== "" && (
           <Fragment>
             <h2 className="fs-3 text-center text-muted my-4">
               Select your {filters.catOne} category

@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { Card, Carousel, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Carousel, Col, Container, Row } from "react-bootstrap";
+import { useRouter } from "next/router";
 
 function ExploreProducts() {
-  const [index, setIndex] = useState(0);
-
-  const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-  };
-
+  const router = useRouter();
   const printingSolutions = [
     {
       img: "https://cdn.pixabay.com/photo/2018/07/26/03/11/offset-printing-3562700_960_720.jpg",
@@ -61,40 +57,41 @@ function ExploreProducts() {
       </h1>
       <Container
         className="p-2 mt-2 rounded rounded-lg"
-        style={{ background: "rgba(255,255,255,0.2)" }}
+        style={{ background: "rgba(255,255,255,0.2)", fontFamily: "regular" }}
       >
-        <Carousel
-          activeIndex={index}
-          onSelect={handleSelect}
-          wrap={true}
-          indicators={false}
-        >
-          {printingSolutions.map((item, key) => {
-            return (
-              <Carousel.Item key={key}>
-                <Row className="justify-content-center">
-                  <Col lg={4} md={6} sm={12}>
-                    <Card className="w-100 p-1">
-                      <Card.Img variant="top" src={item.img} />
-                      <Card.Body style={{ fontFamily: "regular" }}>
-                        <Card.Title>
-                          <b> {item.heading} </b>
-                        </Card.Title>
-                        <Card.Text>{item.text}</Card.Text>
-                        <Card.Link style={{ color: "#2160fd" }} href="/">
-                          Get Started
-                        </Card.Link>
-                        <Card.Link style={{ color: "#2160fd" }} href="/">
-                          Explore All Options
-                        </Card.Link>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
-              </Carousel.Item>
-            );
-          })}
-        </Carousel>
+        {printingSolutions.map((item, key) => {
+          return (
+            <Row className="w-100 p-3" key={key} style={{ gap: "0rem" }}>
+              <Col sm={12} md={6} lg={3} className="p-0">
+                <img style={{ width: "100%" }} src={item.img} />
+              </Col>
+              <Col sm={12} md={6} lg={9} className="pl-4">
+                <p className="text-white fs-4">
+                  <b> {item.heading}</b>
+                </p>
+                <p className="text-white"> {item.text} </p>
+                <div className="d-flex" style={{ gap: "10px" }}>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push("/dashboard");
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push("/products");
+                    }}
+                  >
+                    Explore All Options
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          );
+        })}
       </Container>
     </Container>
   );

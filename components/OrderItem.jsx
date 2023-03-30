@@ -4,9 +4,33 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 function OrderItem({ order }) {
+  const date = new Date(order?.order_on).toLocaleDateString();
+  let value = 0;
+  switch (order.order_status) {
+    case "ordered":
+      {
+        value = 25;
+      }
+      break;
+    case "processing":
+      {
+        value = 50;
+      }
+      break;
+    case "out_for_delivery":
+      {
+        value = 75;
+      }
+      break;
+    case "delivered":
+      {
+        value = 100;
+      }
+      break;
+  }
   return (
     <Card
-      className="w-100 border-right-0 border-left-0 rounded bg-transparent"
+      className="w-100 border-right-0 border-left-0 rounded bg-transparent mt-4"
       style={{
         borderTop: "3px solid #2160fd",
         borderBottom: "3px solid #2160fd",
@@ -30,7 +54,7 @@ function OrderItem({ order }) {
               Date
             </p>
             <p className="m-0 fs-6" style={{ fontFamily: "regular" }}>
-              10 April 2021
+              {date}
             </p>
           </span>
           <span style={{ width: "fit-content" }}>
@@ -41,7 +65,7 @@ function OrderItem({ order }) {
               Order ID
             </p>
             <p className="m-0 fs-6" style={{ fontFamily: "regular" }}>
-              Order ID goes here
+              {order._id}
             </p>
           </span>
         </Row>
@@ -58,15 +82,15 @@ function OrderItem({ order }) {
               >
                 <span className="w-100 d-flex justify-content-between">
                   <p> Product Name </p>
-                  <p> &#8377; Price </p>
+                  <p> &#8377; {order?.totalAmount} </p>
                 </span>
                 <span className="w-100 d-flex justify-content-between">
                   <p> Shipping </p>
-                  <p> &#8377; Price </p>
+                  <p> &#8377; 0 </p>
                 </span>
                 <span className="w-100 d-flex justify-content-between">
                   <p> Discount </p>
-                  <p> - &#8377; Price </p>
+                  <p> - &#8377; {order?.totalAmount - order?.subTotal} </p>
                 </span>
                 <span className="w-100 d-flex justify-content-between">
                   <p className="fs-5"> Grand Total </p>
@@ -74,7 +98,7 @@ function OrderItem({ order }) {
                     className="fs-5"
                     style={{ fontFamily: "bold", color: "#2160fd" }}
                   >
-                    &#8377; Price
+                    &#8377; {order?.subTotal}
                   </p>
                 </span>
               </div>
@@ -93,12 +117,12 @@ function OrderItem({ order }) {
                   </Card.Title>
                   <span style={{ fontFamily: "regular" }}>
                     <p>
-                      Order Status: <b>Ordered</b>
+                      Order Status: <b>{order?.order_status}</b>
                     </p>
                   </span>
                 </span>
                 <CircularProgressbar
-                  value={25}
+                  value={value}
                   strokeWidth={50}
                   styles={buildStyles({
                     strokeLinecap: "butt",

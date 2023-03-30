@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import OrderItem from "./OrderItem";
 import filterimg from "../imgs/filter.png";
+import userContext from "../context/user/userContext";
 
 function Orders() {
+  const userCtx = useContext(userContext);
   const [filter, setFilter] = useState("");
+  useEffect(() => {
+    userCtx.getOrders();
+  }, []);
   return (
     <Container className="container-lg">
       <InputGroup className="mb-3">
@@ -20,9 +25,13 @@ function Orders() {
         />
       </InputGroup>
       <Row className="justify-content-center">
-        <Col sm={12} md={8}>
-          <OrderItem />
-        </Col>
+        {userCtx.orders.map((order, key) => {
+          return (
+            <Col sm={12} md={8} key={key}>
+              <OrderItem order={order} />
+            </Col>
+          );
+        })}
       </Row>
     </Container>
   );

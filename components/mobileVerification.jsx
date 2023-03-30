@@ -4,8 +4,10 @@ import Loading from "./Loading";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../firebase";
 import userContext from "../context/user/userContext";
+import { useRouter } from "next/router";
 
 function MobileVerification() {
+  const router = useRouter();
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [final, setFinal] = useState(null);
@@ -112,6 +114,17 @@ function MobileVerification() {
                     {"Resend OTP"}
                   </Button>
                 ) : null}
+                <Button
+                  variant="danger"
+                  style={{ fontFamily: "regular" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    localStorage.removeItem("accessToken");
+                    router.replace("/auth");
+                  }}
+                >
+                  Logout
+                </Button>
               </Card.Body>
             </Card>
           )}
