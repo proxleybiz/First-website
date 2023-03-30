@@ -23,6 +23,13 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
   });
   const [cost, setCost] = useState(0);
   useEffect(() => {
+    if (
+      filters.catOne === "" ||
+      filters.catTwo === "" ||
+      filters.catThree === ""
+    ) {
+      return;
+    }
     let cost = 0;
     const t1 = FILTER_ONE.find((i) => i.name === filters.catOne);
     cost += t1 ? t1.cost : 0;
@@ -30,11 +37,12 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
     if (t2) {
       t2 = t2.items.find((i) => i.name === filters.catTwo);
       cost += t2 ? t2.cost : 0;
+      t2 = t2.options.find((i) => i.name === filters.catThree);
+      if (t2) {
+        cost += t2.cost;
+      }
     }
-    t2 = t2.options.find((i) => i.name === filters.catThree);
-    if (t2) {
-      cost += t2.cost;
-    }
+
     const cust = CUSTOMIZATION.find((i) => i.category === filters.catOne);
     if (cust) {
       for (let i = 0; i < customization.length; i++) {
@@ -47,7 +55,7 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
     }
     setCost(cost);
     setLoading(false);
-  }, []);
+  }, [filters, customization]);
   const handler = (e) => {
     setNewAddress({ ...newAddress, [e.target.name]: e.target.value });
   };
