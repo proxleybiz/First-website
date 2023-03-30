@@ -82,6 +82,10 @@ function OrderItem({ order }) {
               >
                 <span className="w-100 d-flex justify-content-between">
                   <p> Product Name </p>
+                  <p> {order?.product?.filters.catOne} </p>
+                </span>
+                <span className="w-100 d-flex justify-content-between">
+                  <p> Price </p>
                   <p> &#8377; {order?.totalAmount} </p>
                 </span>
                 <span className="w-100 d-flex justify-content-between">
