@@ -1,9 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Button, Card } from "react-bootstrap";
+import React, { useEffect, useState, useContext } from "react";
+import { Button, Card, Form } from "react-bootstrap";
 import { useRouter } from "next/router";
-import githubLogo from "../imgs/github.png";
 import googleLogo from "../imgs/google.png";
+import userContext from "../context/user/userContext";
 import {
   GithubAuthProvider,
   signInWithPopup,
@@ -13,6 +13,14 @@ import { auth } from "../firebase";
 
 function RegsiterCard({ switchFn }) {
   const router = useRouter();
+  const userCtx = useContext(userContext);
+  const [loading, setLoading] = useState(false);
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    confirm: "",
+    name: "",
+  });
   useEffect(() => {
     if (
       localStorage.getItem("accessToken") !== null &&
@@ -21,9 +29,47 @@ function RegsiterCard({ switchFn }) {
       router.replace("/dashboard");
     }
   }, []);
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  const register = () => {
+    if (
+      credentials.email.trim() === "" ||
+      credentials.password.length < 7 ||
+      credentials.name.trim() === ""
+    ) {
+      return alert(
+        "Email, name and a password greater than 6 charachters is needed."
+      );
+    }
+    if (!validateEmail(credentials.email)) {
+      return alert("Please enter a valid email");
+    }
+    if (credentials.password !== credentials.confirm) {
+      return alert("Passwords do not match.");
+    }
+    setLoading(true);
+    userCtx.register(
+      { ...credentials },
+      () => {
+        setLoading(false);
+        router.replace("/dashboard");
+      },
+      (err) => {
+        alert(err);
+        setLoading(false);
+      }
+    );
+  };
 
   const googleLogin = async () => {
     try {
+      setLoading(true);
       const provider = new GoogleAuthProvider();
       const res = await signInWithPopup(auth, provider);
       if (!res) {
@@ -35,9 +81,11 @@ function RegsiterCard({ switchFn }) {
         localStorage.setItem("accessToken", user.accessToken);
         router.replace("/dashboard");
       } else {
+        setLoading(false);
         localStorage.removeItem("accessToken");
       }
     } catch (err) {
+      setLoading(false);
       localStorage.removeItem("accessToken");
     }
   };
@@ -68,6 +116,59 @@ function RegsiterCard({ switchFn }) {
             className="bg-light rounded-circle p-0"
           />
           Continue with Google
+        </Button>
+        <p className="w-100 text-center fs-6 text-light"> OR </p>
+        <Form.Group className="mb-3 w-100">
+          <Form.Control
+            type="email"
+            placeholder="Enter Email"
+            value={credentials.email}
+            onChange={(e) => {
+              setCredentials({ ...credentials, email: e.target.value });
+            }}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3 w-100">
+          <Form.Control
+            type="name"
+            placeholder="Enter your name"
+            value={credentials.name}
+            onChange={(e) => {
+              setCredentials({ ...credentials, name: e.target.value });
+            }}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3 w-100">
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={credentials.password}
+            onChange={(e) => {
+              setCredentials({ ...credentials, password: e.target.value });
+            }}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3 w-100">
+          <Form.Control
+            type="password"
+            placeholder="Confirm Password"
+            value={credentials.confirm}
+            onChange={(e) => {
+              setCredentials({ ...credentials, confirm: e.target.value });
+            }}
+          />
+        </Form.Group>
+        <Button
+          className="btn-hover w-100 mb-3"
+          style={{ fontFamily: "regular" }}
+          onClick={(e) => {
+            e.preventDefault();
+            register();
+          }}
+          disabled={loading}
+        >
+          Register
         </Button>
         <span
           className="d-flex flex-row align-items-center text-white mt-5"

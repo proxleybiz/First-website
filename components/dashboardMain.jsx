@@ -23,7 +23,7 @@ const MobileVerification = dynamic(() => import("./mobileVerification"), {
 function DashboardMain() {
   const router = useRouter();
   const userCtx = useContext(userContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState("");
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [renderElement, setRenderElement] = useState(null);

@@ -1,11 +1,13 @@
 import React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import right from "../imgs/right.png";
+import { useRouter } from "next/router";
 
 function MyNavbar({ mode = 0 }) {
   // 2:navbar on login screen
   // 1:navbar on dashboard
   // 0:navbar on home screen
+  const router = useRouter();
   return (
     <Navbar bg="transparent" sticky="top">
       <Container fluid className="justify-content-center">
@@ -26,6 +28,19 @@ function MyNavbar({ mode = 0 }) {
           >
             Get Started <img src={right.src} />
           </Nav.Link>
+        )}
+        {mode === 1 && (
+          <Button
+            variant="danger"
+            style={{ fontFamily: "regular" }}
+            onClick={(e) => {
+              e.preventDefault();
+              localStorage.removeItem("accessToken");
+              router.replace("/auth");
+            }}
+          >
+            Logout
+          </Button>
         )}
       </Container>
     </Navbar>

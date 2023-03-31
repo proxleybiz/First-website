@@ -1,6 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Button, Card, Form } from "react-bootstrap";
-import githubLogo from "../imgs/github.png";
 import googleLogo from "../imgs/google.png";
 import userContext from "../context/user/userContext";
 import { useRouter } from "next/router";
@@ -16,6 +15,15 @@ function LoginCard({ switchFn }) {
   const [loading, setLoading] = useState(false);
   const userCtx = useContext(userContext);
   const router = useRouter();
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("accessToken") !== null &&
+      localStorage.getItem("accessToken") !== undefined
+    ) {
+      router.replace("/dashboard");
+    }
+  }, []);
 
   const login = () => {
     setLoading(true);
@@ -62,7 +70,7 @@ function LoginCard({ switchFn }) {
         <Form.Group className="mb-3 w-100">
           <Form.Control
             type="email"
-            placeholder="Enter Email / Mobile Number"
+            placeholder="Enter Email"
             value={credentials.email}
             onChange={(e) => {
               setCredentials({ ...credentials, email: e.target.value });

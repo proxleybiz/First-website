@@ -235,6 +235,27 @@ function UserState(props) {
       }
     }
   };
+
+  const register = async (data, success = null, error = null) => {
+    try {
+      const res = await axios.post("/api/register", { ...data }, config);
+      if (res.data.status) {
+        localStorage.setItem("accessToken", res.data.data);
+        if (success) {
+          success();
+        }
+      } else {
+        localStorage.removeItem("accessToken");
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
   return (
     <UserContext.Provider
       value={{
@@ -248,6 +269,7 @@ function UserState(props) {
         getOrders,
         validateOrder,
         fetchOrderDetails,
+        register
       }}
     >
       {props.children}
