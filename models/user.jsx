@@ -46,6 +46,25 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  profileCompleted: {
+    type: Boolean,
+  },
+  companyName: { type: String },
+  companyGST: {
+    type: String,
+  },
+  businessCategory: {
+    type: String,
+  },
+  businessAddress: {
+    type: String,
+  },
+  designation: {
+    type: String,
+  },
+  accountNumber: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.models.users || mongoose.model("users", UserSchema);

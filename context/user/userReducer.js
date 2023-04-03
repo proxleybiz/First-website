@@ -1,4 +1,4 @@
-import { ADD_ORDERS, GET_ORDERS, GET_USER } from "../types";
+import { ADD_ORDERS, GET_ORDERS, GET_USER, UPDATE_USER } from "../types";
 
 const userReducer = (state, action) => {
   switch (action.type) {
@@ -10,6 +10,9 @@ const userReducer = (state, action) => {
     }
     case ADD_ORDERS: {
       return { ...state, orders: [...state.orders, action.payload] };
+    }
+    case UPDATE_USER: {
+      return { ...state, user: action.payload };
     }
     default:
       return state;

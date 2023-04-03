@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useReducer } from "react";
 import setAuthToken from "../../utils/setAccessToken";
-import { ADD_ORDERS, GET_ORDERS, GET_USER } from "../types";
+import { ADD_ORDERS, GET_ORDERS, GET_USER, UPDATE_USER } from "../types";
 import UserContext from "./userContext";
 import userReducer from "./userReducer";
 
@@ -256,6 +256,26 @@ function UserState(props) {
       }
     }
   };
+  const updateProfile = async (data, success = null, error = null) => {
+    try {
+      const res = await axios.post("/api/updateProfile", { ...data }, config);
+      if (res.data.status) {
+        dispatch({ type: UPDATE_USER, payload: res.data.data });
+        if (success) {
+          success();
+        }
+      } else {
+        localStorage.removeItem("accessToken");
+        if (error) {
+          error(res.data.msg);
+        }
+      }
+    } catch (err) {
+      if (error) {
+        error(err);
+      }
+    }
+  };
   return (
     <UserContext.Provider
       value={{
@@ -269,7 +289,8 @@ function UserState(props) {
         getOrders,
         validateOrder,
         fetchOrderDetails,
-        register
+        register,
+        updateProfile,
       }}
     >
       {props.children}

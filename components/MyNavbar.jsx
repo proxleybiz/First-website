@@ -29,19 +29,6 @@ function MyNavbar({ mode = 0 }) {
             Get Started <img src={right.src} />
           </Nav.Link>
         )}
-        {mode === 1 && (
-          <Button
-            variant="danger"
-            style={{ fontFamily: "regular" }}
-            onClick={(e) => {
-              e.preventDefault();
-              localStorage.removeItem("accessToken");
-              router.replace("/auth");
-            }}
-          >
-            Logout
-          </Button>
-        )}
       </Container>
     </Navbar>
   );

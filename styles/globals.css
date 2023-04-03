@@ -77,6 +77,20 @@ a {
   stroke: ghostwhite !important;
 }
 
+button {
+  transition: 0.5s;
+}
+
 .hover-select:hover {
   cursor: pointer;
+}
+
+.hover-dark:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transition: 0.5s;
+}
+
+.logout-hover:hover {
+  background: rgba(255, 49, 49, 0.8) !important;
+  transition: 0.5s;
 }

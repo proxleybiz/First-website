@@ -30,6 +30,13 @@ const authenticatedRequest = async (req, res) => {
           orders: [],
           address: [],
           password: "",
+          profileCompleted: false,
+          companyName: "",
+          companyGST: "",
+          businessCategory: "",
+          businessAddress: "",
+          designation: "",
+          accountNumber: "",
         });
         await dbUser.save();
       }

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import {
   Button,
   ButtonGroup,
+  Col,
   Container,
   Row,
   Tab,
@@ -14,7 +15,7 @@ import userContext from "../context/user/userContext";
 import dynamic from "next/dynamic";
 import Loading from "./Loading";
 import Orders from "./orders";
-const Dashboard = dynamic(() => import("./dashboard"), {ssr:false});
+const Dashboard = dynamic(() => import("./dashboard"), { ssr: false });
 const Profile = dynamic(() => import("./profile"), { ssr: false });
 const MobileVerification = dynamic(() => import("./mobileVerification"), {
   ssr: false,
@@ -27,13 +28,13 @@ function DashboardMain() {
   const [selectedTab, setSelectedTab] = useState("");
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [renderElement, setRenderElement] = useState(null);
-  const tabs = ["Profile", "Dashboard", "Orders"];
+  const tabs = ["Profile", "Dashboard", "Orders", "Addresses"];
   const getUser = () => {
     setLoading(true);
     userCtx.getUser(
       () => {
         setLoading(false);
-        setSelectedTab("Dashboard");
+        setSelectedTab("Profile");
       },
       (err) => {
         setLoading(false);
@@ -69,7 +70,7 @@ function DashboardMain() {
     }
   }, [selectedTab]);
   return (
-    <Container fluid className="min-vh-100">
+    <Container fluid className="min-vh-100" style={{ fontFamily: "regular" }}>
       <Head>
         <title> Dashboard | Proxley </title>
       </Head>
@@ -79,27 +80,35 @@ function DashboardMain() {
       ) : (
         <Fragment>
           {userCtx.user && userCtx.user.phoneNumber.trim() !== "" ? (
-            <>
-              <Row className="justify-content-center">
-                <ButtonGroup
-                  size="lg"
-                  className="mt-2 mb-4 mx-auto"
-                  style={{ width: "fit-content" }}
+            <Row>
+              <Col sm={0} md={3}>
+                <div
+                  className="d-flex flex-column m-4 rounded p-2"
+                  style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
                 >
+                  <h1 className="text-white fs-1">
+                    Hello, <br /> {userCtx.user?.name}
+                  </h1>
                   {tabs.map((tab, key) => {
                     return (
                       <Button
                         key={key}
-                        className="border-0 fs-5"
+                        className="border-0 fs-5 mt-3 py-3 text-start hover-dark"
                         style={{
                           background:
                             tab === selectedTab
                               ? "#2160fd"
                               : "rgba(255,255,255,0.2)",
-                          fontFamily: "regular",
                         }}
                         onClick={(e) => {
                           e.preventDefault();
+                          if (tab === selectedTab) {
+                            return;
+                          }
+                          if (!userCtx.user?.profileCompleted) {
+                            alert("Please complete your profile");
+                            return;
+                          }
                           setSelectedTab(tab);
                         }}
                       >
@@ -107,10 +116,25 @@ function DashboardMain() {
                       </Button>
                     );
                   })}
-                </ButtonGroup>
-              </Row>
-              {renderElement}
-            </>
+                  <Button
+                    className="border-0 fs-5 mt-3 py-3 text-start logout-hover"
+                    style={{
+                      background: "rgba(255,255,255,0.2)",
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      localStorage.removeItem("accessToken");
+                      router.replace("/auth");
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              </Col>
+              <Col sm={12} md={9}>
+                {renderElement}
+              </Col>
+            </Row>
           ) : (
             <MobileVerification />
           )}

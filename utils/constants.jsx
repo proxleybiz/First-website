@@ -8,6 +8,9 @@ export const FILTER_ONE = [
   { name: PACKAGING, img: box.src, cost: 1 },
 ];
 
+export const METHODS = ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"];
+export const ORIGINS = ["https://proxley.vercel.app"];
+
 export const FILTER_TWO = [
   {
     category: PACKAGING,

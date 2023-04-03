@@ -3,10 +3,17 @@ const { default: resObj } = require("../../utils/resObj");
 const User = require("../../models/user");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+import NextCors from "nextjs-cors";
+import { METHODS, ORIGINS } from "../../utils/constants";
 
 const func = async (req, res) => {
   try {
     await dbConnect();
+    await NextCors(req, res, {
+      methods: METHODS,
+      origin: ORIGINS,
+      optionsSuccessStatus: 200,
+    });
     const { email, password } = req.body;
     const user = await User.findOne({
       $or: [{ email }, { phoneNumber: "+91" + email }],
@@ -25,6 +32,7 @@ const func = async (req, res) => {
     const payload = {
       exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
       email: user.email,
+      name: user.name,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET);
     return res.json(resObj(true, token, "User Loaded"));

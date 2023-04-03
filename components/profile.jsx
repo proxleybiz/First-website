@@ -15,6 +15,15 @@ function Profile() {
     oldPassword: "",
     confirmPassword: "",
   });
+  const [profile, setProfile] = useState({
+    companyName: userCtx.user?.companyName,
+    companyGST: userCtx.user?.companyGST,
+    businessCategory: userCtx.user?.businessCategory,
+    businessAddress: userCtx.user?.businessAddress,
+    designation: userCtx.user?.designation,
+    accountNumber: userCtx.user?.accountNumber,
+    name: userCtx.user?.name,
+  });
 
   const updatePassword = () => {
     setShow(false);
@@ -40,10 +49,53 @@ function Profile() {
       }
     );
   };
+
+  const changeHandler = (e) => {
+    setProfile({ ...profile, [e.target.name]: e.target.value });
+  };
+
+  const updateProfile = () => {
+    const temp = Object.keys(profile);
+    for (let i = 0; i < temp.length; i++) {
+      if (profile[temp[i]].trim() === "") {
+        alert(`Profile Incomplete`);
+        return;
+      }
+    }
+    setLoading(true);
+    userCtx.updateProfile(
+      profile,
+      () => {
+        setLoading(false);
+      },
+      (err) => {
+        setLoading(false);
+        setProfile({
+          companyName: userCtx.user?.companyName,
+          companyGST: userCtx.user?.companyGST,
+          businessCategory: userCtx.user?.businessCategory,
+          businessAddress: userCtx.user?.businessAddress,
+          designation: userCtx.user?.designation,
+          accountNumber: userCtx.user?.accountNumber,
+          name: userCtx.user?.name,
+        });
+      }
+    );
+  };
+
+  const profileStatus = (profile) => {
+    const temp = Object.keys(profile);
+    for (let i = 0; i < temp.length; i++) {
+      if (profile[temp[i]] !== userCtx.user[temp[i]]) {
+        return false;
+      }
+    }
+    return true;
+  };
   return (
     <Container fluid>
       <Row className="justify-content-center">
-        <Col sm={12} md={8} lg={4}>
+        <Col sm={12}>
           {!userCtx.user || loading ? (
             <Loading />
           ) : (
@@ -69,6 +121,15 @@ function Profile() {
                     {userCtx?.user?.name}
                   </h1>
                 </Row>
+                <div
+                  style={{ gap: "5px" }}
+                  className="d-flex flex-row align-items-center"
+                >
+                  <p className="text-white"> Profile Status: </p>
+                  <p className={"text-warning"}>
+                    {profileStatus(profile) ? "Saved" : "Unsaved"}
+                  </p>
+                </div>
                 <Form.Control
                   disabled
                   value={userCtx.user?.email}
@@ -90,6 +151,89 @@ function Profile() {
                   className="text-muted"
                   style={{ fontFamily: "regular" }}
                 />
+                <Form.Group className="w-100">
+                  <Form.Label className="text-white"> Username </Form.Label>
+                  <Form.Control
+                    value={profile.name}
+                    className="text-muted w-100"
+                    style={{ fontFamily: "regular" }}
+                    name="name"
+                    placeholder="Username"
+                    onChange={changeHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="w-100">
+                  <Form.Label className="text-white"> Company Name </Form.Label>
+                  <Form.Control
+                    value={profile.companyName}
+                    className="text-muted w-100"
+                    style={{ fontFamily: "regular" }}
+                    name="companyName"
+                    placeholder="Company Name"
+                    onChange={changeHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="w-100">
+                  <Form.Label className="text-white"> Company GST </Form.Label>
+                  <Form.Control
+                    value={profile.companyGST}
+                    className="text-muted w-100"
+                    style={{ fontFamily: "regular" }}
+                    name="companyGST"
+                    placeholder="Company GST"
+                    onChange={changeHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="w-100">
+                  <Form.Label className="text-white">
+                    Business Category
+                  </Form.Label>
+                  <Form.Control
+                    value={profile.businessCategory}
+                    className="text-muted w-100"
+                    style={{ fontFamily: "regular" }}
+                    name="businessCategory"
+                    placeholder="Business Category"
+                    onChange={changeHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="w-100">
+                  <Form.Label className="text-white">
+                    Business Address
+                  </Form.Label>
+                  <Form.Control
+                    value={profile.businessAddress}
+                    className="text-muted w-100"
+                    style={{ fontFamily: "regular" }}
+                    name="businessAddress"
+                    placeholder="Business Address"
+                    onChange={changeHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="w-100">
+                  <Form.Label className="text-white"> Designation </Form.Label>
+                  <Form.Control
+                    value={profile.designation}
+                    className="text-muted w-100"
+                    style={{ fontFamily: "regular" }}
+                    name="designation"
+                    placeholder="Designation"
+                    onChange={changeHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="w-100">
+                  <Form.Label className="text-white">
+                    Bank Account Number
+                  </Form.Label>
+                  <Form.Control
+                    value={profile.accountNumber}
+                    className="text-muted w-100"
+                    style={{ fontFamily: "regular" }}
+                    name="accountNumber"
+                    placeholder="Bank Account Number"
+                    onChange={changeHandler}
+                  />
+                </Form.Group>
                 <Button
                   style={{ fontFamily: "regular", background: "#2160fd" }}
                   onClick={(e) => {
@@ -100,15 +244,14 @@ function Profile() {
                   Update Password
                 </Button>
                 <Button
-                  variant="danger"
+                  variant="success"
                   style={{ fontFamily: "regular" }}
                   onClick={(e) => {
                     e.preventDefault();
-                    localStorage.removeItem("accessToken");
-                    router.replace("/auth");
+                    updateProfile();
                   }}
                 >
-                  Logout
+                  Update Profile
                 </Button>
                 <UpdatePasswordModal
                   show={show}
