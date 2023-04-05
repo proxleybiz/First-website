@@ -117,7 +117,6 @@ function DashboardMain() {
                   className="d-flex flex-column m-4 rounded p-2"
                   style={{
                     backgroundColor: "rgba(0,0,0,0.5)",
-                    maxHeight: "80vh",
                     overflow: "auto",
                   }}
                 >
@@ -172,7 +171,7 @@ function DashboardMain() {
                     className="w-100 d-flex flex-column align-items-end"
                     style={{
                       backgroundColor: "transparent",
-                      maxHeight: "50vh",
+                      maxHeight: "40vh",
                       overflow: "auto",
                     }}
                   >
