@@ -94,3 +94,18 @@ button {
   background: rgba(255, 49, 49, 0.8) !important;
   transition: 0.5s;
 }
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}

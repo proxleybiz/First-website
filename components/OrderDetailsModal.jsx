@@ -6,6 +6,7 @@ import loadScript from "../utils/loadScript";
 import uploadImage from "../utils/uploadImage";
 import { useRouter } from "next/router";
 import { CUSTOMIZATION, FILTER_ONE, FILTER_TWO } from "../utils/constants";
+import setAuthToken from "../utils/setAccessToken";
 
 function OrderDetailsModal({ show, handleClose, customization, filters }) {
   const [loading, setLoading] = useState(true);
@@ -22,12 +23,14 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
     country: "",
   });
   const [cost, setCost] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   useEffect(() => {
     if (
       filters.catOne === "" ||
       filters.catTwo === "" ||
       filters.catThree === ""
     ) {
+      handleClose();
       return;
     }
     let cost = 0;
@@ -62,6 +65,10 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
 
   const pay = async () => {
     try {
+      if (cost * quantity <= 0) {
+        alert("Amount Must be greater than 0.");
+        return;
+      }
       let s = true;
       Object.keys(newAddress).map((i) => {
         if (newAddress[i].trim() === "") {
@@ -89,13 +96,25 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
           value: item.selectedValue,
         });
       }
+      if (
+        localStorage.getItem("accessToken") === null ||
+        localStorage.getItem("accessToken") === undefined
+      ) {
+        if (error) {
+          error("Invalid Token");
+        }
+        return;
+      } else {
+        setAuthToken(localStorage.getItem("accessToken"));
+      }
       const res = await axios.post(
         "/api/createOrder",
         {
-          amount: cost,
-          subTotal: cost,
+          amount: cost * quantity,
+          subTotal: cost * quantity,
           product: { filters, customization: finalCustomizations },
           address: newAddress,
+          quantity: quantity,
         },
         {
           headers: {
@@ -110,7 +129,7 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
       const order = res.data.data.order;
       const ord_object = res.data.data.ord_object;
       const ord_options = {
-        amount: cost * 100,
+        amount: cost * quantity * 100,
         currency: "INR",
         payment_capture: 1,
       };
@@ -124,7 +143,10 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
         description: "Place Order",
         order_id: order.id,
         handler: async function (response) {
-          console.log(response);
+          if (!response.razorpay_payment_id) {
+            setLoading(false);
+            return;
+          }
           userCtx.validateOrder(
             { id: ord_object._id, payment: response },
             () => {
@@ -149,6 +171,32 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
               );
             }
           );
+        },
+        modal: {
+          ondismiss: async function () {
+            if (
+              localStorage.getItem("accessToken") === null ||
+              localStorage.getItem("accessToken") === undefined
+            ) {
+              if (error) {
+                error("Invalid Token");
+              }
+              return;
+            } else {
+              setAuthToken(localStorage.getItem("accessToken"));
+            }
+            await axios.post(
+              "/api/deleteOrder",
+              { id: ord_object._id },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+              }
+            );
+            setLoading(false);
+          },
         },
         prefill: {
           name: userCtx.user?.name,
@@ -190,8 +238,19 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
         })}
         <p className="fs-5 mt-4">
           <b>Cost: </b>
-          {cost}
+          {cost * quantity}
         </p>
+        <Form.Group>
+          <Form.Label className="fs-5 mt-4"> Quantity </Form.Label>
+          <Form.Control
+            style={{ width: "fit-content" }}
+            value={quantity}
+            onChange={(e) => {
+              setQuantity(e.target.value);
+            }}
+            type="number"
+          />
+        </Form.Group>
         <p className="fs-5 mt-4">
           <b>Delivery Details </b>
         </p>
@@ -267,20 +326,25 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
         <p className="fs-5 mt-4">
           <b> Or Select Delivery Address </b>
         </p>
-        <Row className="w-100 px-10">
-          {userCtx.user?.address?.map((item, key) => {
+        <Row style={{ gap: "10px" }} className="mt-4">
+          {userCtx.user?.address.map((item, key) => {
             return (
-              <Col sm={12} md={6} lg={3} className="p-2" key={key}>
-                <Card className="w-100 bg-transparent rounded">
-                  <Card.Title> {item?.addressTitle} </Card.Title>
+              <Col key={key} sm={4}>
+                <Card className="w-100">
+                  <Card.Header as="h5"> {item.addressTitle} </Card.Header>
                   <Card.Body>
-                    <p className="fs-6"> {item?.lineOne} </p>
-                    <p className="fs-6"> {item?.lineTwo} </p>
-                    <p className="fs-6"> {item?.landmark} </p>
-                    <p className="fs-6"> {item?.pincode} </p>
-                    <p className="fs-6">
-                      {item?.city}/{item?.state}/{item?.country}
-                    </p>
+                    <Card.Text>
+                      {`${item.lineOne}, ${item.lineTwo}, ${item.landmark}, ${item.city}, ${item.state}, ${item.country}, ${item.pincode}`}
+                    </Card.Text>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setNewAddress({ ...item });
+                      }}
+                      variant="primary"
+                    >
+                      Select
+                    </Button>
                   </Card.Body>
                 </Card>
               </Col>

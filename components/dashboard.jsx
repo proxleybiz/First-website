@@ -13,13 +13,12 @@ import { SketchPicker } from "react-color";
 import OrderDetailsModal from "./OrderDetailsModal";
 import Customizations from "./Customizations";
 
-function Dashboard() {
+function Dashboard({ index, setIndex, customization, setCustomization }) {
   const [filters, setFilters] = useState({
     catOne: "",
     catTwo: "",
     catThree: "",
   });
-  const [customization, setCustomization] = useState([]);
   const [showCustoms, setCustoms] = useState(false);
 
   const getSecondFilters = (catOne) => {
@@ -56,7 +55,10 @@ function Dashboard() {
     return temp.options;
   };
   return (
-    <Container className="container-lg" style={{ fontFamily: "regular" }}>
+    <Container
+      className="container-lg"
+      style={{ fontFamily: "regular", marginLeft: "0px" }}
+    >
       {filters.catOne.trim() !== "" &&
       filters.catTwo.trim() !== "" &&
       filters.catThree.trim() !== "" &&
@@ -65,6 +67,8 @@ function Dashboard() {
           filters={filters}
           setCustomization={setCustomization}
           customization={customization}
+          setIndex={setIndex}
+          index={index}
           discard={() => {
             setCustoms(false);
             setFilters({
@@ -73,6 +77,7 @@ function Dashboard() {
               catThree: "",
             });
             setCustomization([]);
+            setIndex(0);
           }}
         />
       ) : (
@@ -98,7 +103,7 @@ function Dashboard() {
                       if (!result) {
                         setCustomization([]);
                       } else if (item.name === PRINTING) {
-                        setCustomization([
+                        const temp = [
                           ...result.options.map((i) => {
                             return { ...i, selectedValue: "" };
                           }),
@@ -114,13 +119,13 @@ function Dashboard() {
                             values: ["CYAN", "BLACK", "MAGENTA", "YELLOW"],
                             selectedValue: "",
                           },
-                        ]);
+                        ];
+                        setCustomization(temp);
                       } else {
-                        setCustomization(
-                          result.options.map((i) => {
-                            return { ...i, selectedValue: "" };
-                          })
-                        );
+                        const temp = result.options.map((i) => {
+                          return { ...i, selectedValue: "" };
+                        });
+                        setCustomization(temp);
                       }
                     }}
                     style={{

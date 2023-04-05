@@ -1,12 +1,21 @@
 import React, { Fragment, useState } from "react";
 import OrderDetailsModal from "./OrderDetailsModal";
-import { Button, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, ProgressBar, Row } from "react-bootstrap";
 import { SketchPicker } from "react-color";
-import { PRINTING } from "../utils/constants";
+import { FILTER_ONE, PRINTING } from "../utils/constants";
+import left from "../imgs/left-arrow.png";
+import right from "../imgs/right-arrow.png";
 
-function Customizations({ filters, customization, setCustomization, discard }) {
+function Customizations({
+  filters,
+  customization,
+  setCustomization,
+  discard,
+  index,
+  setIndex,
+}) {
+  const img = FILTER_ONE.find((i) => i.name === filters.catOne)?.img;
   const [show, setShow] = useState(false);
-  const [index, setIndex] = useState(0);
   const validateData = () => {
     if (
       filters.catOne === "" ||
@@ -44,27 +53,37 @@ function Customizations({ filters, customization, setCustomization, discard }) {
       case "DROP": {
         return (
           <Form.Group className="mt-4">
-            <Form.Label className="text-white">{item.name}</Form.Label>
-            <Form.Select
-              value={
-                customization.find((c) => c.name === item.name)?.selectedValue
-              }
-              onChange={(e) => {
-                setCustomization(
-                  customization.map((c) => {
-                    if (c.name === item.name) {
-                      return { ...c, selectedValue: e.target.value };
-                    }
-                    return c;
-                  })
-                );
-              }}
-            >
-              <option value=""> Select </option>
-              {item.values.map((val, k) => (
-                <option key={k}> {val} </option>
-              ))}
-            </Form.Select>
+            <Form.Label className="text-white fs-4">{item.name}</Form.Label>
+            {item.values.map((val, k) => (
+              <Form.Check
+                className="text-white"
+                key="k"
+                type={"checkbox"}
+                label={val}
+                checked={item.selectedValue === val}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setCustomization(
+                      customization.map((i) => {
+                        if (i.name === item.name) {
+                          return { ...i, selectedValue: val };
+                        }
+                        return i;
+                      })
+                    );
+                  } else {
+                    setCustomization(
+                      customization.map((i) => {
+                        if (i.name === item.name) {
+                          return { ...i, selectedValue: "" };
+                        }
+                        return i;
+                      })
+                    );
+                  }
+                }}
+              />
+            ))}
           </Form.Group>
         );
       }
@@ -74,7 +93,10 @@ function Customizations({ filters, customization, setCustomization, discard }) {
             className="mt-4 d-flex align-items-center"
             style={{ gap: "10px" }}
           >
-            <p className="text-white mb-0" style={{ width: "max-content" }}>
+            <p
+              className="text-white mb-0  fs-4"
+              style={{ width: "max-content" }}
+            >
               {item.name}
             </p>
             <Form.Control
@@ -100,7 +122,7 @@ function Customizations({ filters, customization, setCustomization, discard }) {
       case "COLOR": {
         return (
           <Form.Group className="mt-4">
-            <Form.Label className="text-white">{item.name}</Form.Label>
+            <Form.Label className="text-white fs-4">{item.name}</Form.Label>
             <SketchPicker
               color={
                 customization.find((c) => c.name === item.name)?.selectedValue
@@ -122,7 +144,7 @@ function Customizations({ filters, customization, setCustomization, discard }) {
       case "FILE": {
         return (
           <Form.Group className="mt-4">
-            <Form.Label className="text-white">{item.name}</Form.Label>
+            <Form.Label className="text-white fs-4">{item.name}</Form.Label>
             <Form.Control
               type="file"
               accept="image/*"
@@ -153,47 +175,81 @@ function Customizations({ filters, customization, setCustomization, discard }) {
       <h2 className="fs-3 text-center text-muted my-4">
         Customize your {filters.catOne}
       </h2>
-      {render(index)}
-      <Row style={{ gap: "1rem" }} className="justify-content-start">
-        <Button
-          style={{
-            backgroundColor: "rgba(255,255,255,0.6)",
-            width: "fit-content",
-          }}
-          className="text-white mt-4 border-0"
-          onClick={(e) => {
-            e.preventDefault();
-            discard();
-          }}
-        >
-          Discard
-        </Button>
-        <Button
-          style={{ backgroundColor: "#2160fd", width: "fit-content" }}
-          className="text-white mt-4"
-          onClick={(e) => {
-            e.preventDefault();
-            setIndex(Math.max(index - 1, 0));
-          }}
-        >
-          Previous
-        </Button>
-        {index < customization.length - 1 ? (
-          <Button
-            style={{ backgroundColor: "#2160fd", width: "fit-content" }}
-            className="text-white mt-4"
-            onClick={(e) => {
-              e.preventDefault();
-              if (customization[index].selectedValue.toString().trim() === "") {
-                alert(customization[index].name);
-                return;
-              }
-              setIndex(Math.min(index + 1, customization.length - 1));
+      <Row>
+        <Col sm={9}>
+          <ProgressBar
+            now={((index + 1) / customization.length) * 100}
+            variant="success"
+          />
+          {render(index)}
+          <Row style={{ gap: "1rem" }} className="justify-content-start">
+            <Button
+              style={{
+                backgroundColor: "rgba(255,255,255,0.6)",
+                width: "fit-content",
+              }}
+              className="text-white mt-4 border-0"
+              onClick={(e) => {
+                e.preventDefault();
+                discard();
+              }}
+            >
+              Discard
+            </Button>
+            <Button
+              style={{ backgroundColor: "#2160fd", width: "fit-content" }}
+              className="text-white mt-4"
+              onClick={(e) => {
+                e.preventDefault();
+                setIndex(Math.max(index - 1, 0));
+              }}
+            >
+              Previous
+            </Button>
+            {
+              index < customization.length - 1 && (
+                <Button
+                  style={{ backgroundColor: "#2160fd", width: "fit-content" }}
+                  className="text-white mt-4"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (
+                      customization[index].selectedValue.toString().trim() ===
+                      ""
+                    ) {
+                      alert(customization[index].name);
+                      return;
+                    }
+                    setIndex(Math.min(index + 1, customization.length - 1));
+                  }}
+                >
+                  Continue
+                </Button>
+              ) /*  : (
+              <Button
+                style={{ backgroundColor: "#2160fd", width: "fit-content" }}
+                className="text-white mt-4"
+                onClick={(e) => {
+                  e.preventDefault();
+                  validateData();
+                }}
+              >
+                {"Let's Preview"}
+              </Button>
+            ) */
+            }
+          </Row>
+          <OrderDetailsModal
+            show={show}
+            handleClose={() => {
+              setShow(false);
             }}
-          >
-            Continue
-          </Button>
-        ) : (
+            customization={customization}
+            filters={filters}
+          />
+        </Col>
+        <Col sm={3} className="d-flex flex-column align-items-center">
+          <img src={img} style={{ height: "8rem", width: "fit-content" }} />
           <Button
             style={{ backgroundColor: "#2160fd", width: "fit-content" }}
             className="text-white mt-4"
@@ -201,19 +257,12 @@ function Customizations({ filters, customization, setCustomization, discard }) {
               e.preventDefault();
               validateData();
             }}
+            disabled={index < customization.length - 1}
           >
             {"Let's Preview"}
           </Button>
-        )}
+        </Col>
       </Row>
-      <OrderDetailsModal
-        show={show}
-        handleClose={() => {
-          setShow(false);
-        }}
-        customization={customization}
-        filters={filters}
-      />
     </Fragment>
   );
 }

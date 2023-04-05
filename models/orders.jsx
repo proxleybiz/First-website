@@ -4,6 +4,9 @@ const OrdersSchema = new mongoose.Schema({
   userId: {
     type: String,
   },
+  quantity: {
+    type: Number,
+  },
   order_on: {
     type: Number,
   },

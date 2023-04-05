@@ -18,7 +18,7 @@ const func = async (req, res) => {
     if (!auth.res) {
       return res.json(resObj(false, null, auth.msg));
     }
-    const { amount, subTotal, product, address } = req.body;
+    const { amount, subTotal, product, address, quantity } = req.body;
     const ord_object = Order({
       userId: req.user._id,
       totalAmount: amount,
@@ -29,6 +29,7 @@ const func = async (req, res) => {
       payment_details: null,
       order_status: "pending",
       order_on: Date.now(),
+      quantity: parseInt(quantity),
     });
     await ord_object.save();
 
