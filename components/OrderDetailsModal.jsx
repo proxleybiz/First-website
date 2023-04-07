@@ -94,6 +94,7 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
         finalCustomizations.push({
           name: item.name,
           value: item.selectedValue,
+          type: item.type,
         });
       }
       if (
@@ -214,7 +215,7 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
   return (
     <Modal show={show} onHide={handleClose} fullscreen={true}>
       <Modal.Header closeButton>
-        <Modal.Title>View your order summary</Modal.Title>
+        <Modal.Title>Preview your Order</Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ fontFamily: "regular" }}>
         <h1 className="fs-5">
@@ -224,10 +225,33 @@ function OrderDetailsModal({ show, handleClose, customization, filters }) {
         </h1>
         {customization.map((item, key) => {
           if (item.type === "FILE") {
+            const url = URL.createObjectURL(item.selectedValue);
             return (
-              <h1 key={key} className="fs-6">
-                <b> {item.name}: </b> Uploaded
-              </h1>
+              <span key={key} className="d-flex" style={{ gap: "20px" }}>
+                <b> {item.name}: </b>
+                <div
+                  style={{
+                    height: "150px",
+                    width: "150px",
+                    backgroundImage: `url(${url})`,
+                    backgroundSize: "contain",
+                  }}
+                ></div>
+              </span>
+            );
+          } else if (item.type === "COLOR") {
+            return (
+              <span key={key} className="d-flex" style={{ gap: "20px" }}>
+                <b> {item.name}: </b>
+                <div
+                  style={{
+                    height: "20px",
+                    width: "20px",
+                    backgroundColor: item.selectedValue,
+                  }}
+                ></div>
+                {item.selectedValue}
+              </span>
             );
           }
           return (

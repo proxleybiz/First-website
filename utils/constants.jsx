@@ -467,6 +467,12 @@ export const CUSTOMIZATION = [
         cost: 1,
         values: [],
       },
+      {
+        name: "Upload a text file ",
+        type: "FILE",
+        cost: 1,
+        values: [],
+      },
     ],
   },
 ];

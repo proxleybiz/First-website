@@ -1,11 +1,18 @@
-import React from "react";
-import { Accordion, Card, Container, Row } from "react-bootstrap";
+import React, { createRef, useState } from "react";
+import { Accordion, Button, Card, Container, Row } from "react-bootstrap";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import Pdf from "react-to-pdf";
+import dynamic from "next/dynamic";
+const OrderInfoModal = dynamic(() => import("./OrderInfoModal"), {
+  ssr: false,
+});
 
 function OrderItem({ order }) {
   const date = new Date(order?.order_on).toLocaleDateString();
   let value = 0;
+  const ref = createRef();
+  const [show, setShow] = useState(false);
   switch (order.order_status) {
     case "ordered":
       {
@@ -105,6 +112,15 @@ function OrderItem({ order }) {
                     &#8377; {order?.subTotal}
                   </p>
                 </span>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShow(true);
+                  }}
+                >
+                  {" "}
+                  View Order{" "}
+                </Button>
               </div>
 
               <Container
@@ -138,6 +154,13 @@ function OrderItem({ order }) {
           </Accordion.Item>
         </Accordion>
       </Card.Body>
+      <OrderInfoModal
+        show={show}
+        handleClose={() => {
+          setShow(false);
+        }}
+        order={order}
+      />
     </Card>
   );
 }
